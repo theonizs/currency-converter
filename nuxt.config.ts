@@ -34,13 +34,13 @@ export default defineNuxtConfig({
   runtimeConfig: {
     public: {
       apiCurrency: "",
-      apiBase: "/api",
     },
   },
   nitro: {
     preset: "github_pages",
   },
   app: {
+    baseURL: "/currency-converter/",
     head: {
       title: "Anan - Currency Converter",
       meta: [
