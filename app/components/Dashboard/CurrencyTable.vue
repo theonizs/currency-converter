@@ -2,6 +2,7 @@
 import { type CurrencyListTable } from "~/types/currency";
 import type { TableColumn } from "@nuxt/ui";
 import { StatusCode } from "~/types/enum";
+import type { ApiResponse } from "~/types/api";
 
 const selectedCurrency = defineModel("firstCurrency") as Ref<string | null>;
 const columns: TableColumn<CurrencyListTable>[] = [
@@ -16,28 +17,19 @@ const columns: TableColumn<CurrencyListTable>[] = [
 ];
 
 const globalFilter = ref<string | null>(null);
-const isLoading = ref<boolean>(false);
 
-const { data, error, execute, status } = await useFetch("/api/service", {
-  method: "GET",
-  immediate: false,
-  query: {
-    currency: selectedCurrency,
-  },
+const config = useRuntimeConfig();
+const apiUrl = computed((): string => {
+  return `${config.public.apiCurrency}/${selectedCurrency.value}`;
 });
 
-watch(
-  () => selectedCurrency.value,
-  () => {
-    if (selectedCurrency.value) {
-      isLoading.value = true;
-      execute().finally(() => {
-        isLoading.value = false;
-      });
-    }
-  },
-  { immediate: true }
-);
+const {
+  data,
+  error,
+  pending: isLoading,
+} = useFetch<ApiResponse>(apiUrl, {
+  lazy: true,
+});
 
 const tableList = computed((): CurrencyListTable[] => {
   if (data.value && data.value.rates) {
