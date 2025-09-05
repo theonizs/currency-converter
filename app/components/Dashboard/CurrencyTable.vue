@@ -18,7 +18,7 @@ const columns: TableColumn<CurrencyListTable>[] = [
 const globalFilter = ref<string | null>(null);
 const isLoading = ref<boolean>(false);
 
-const { data, error, execute, status } = await useLazyFetch("/api/service", {
+const { data, error, execute, status } = await useFetch("/api/service", {
   method: "GET",
   immediate: false,
   query: {
